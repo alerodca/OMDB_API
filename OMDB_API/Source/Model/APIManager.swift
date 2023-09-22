@@ -9,47 +9,40 @@ import Foundation
 
 class APICall {
     func getMoviesOrSeries(search:String) {
-        // Example Correct URL  http://www.omdbapi.com/?apikey=525f6ef2&s=dragon ball z
-        
-        let endPoint = "https://www.omdbapi.com/?apikey=525f6ef2"
-        let urlSession = URLSession.shared
-        
-        if let endPointURL = URL(string: "\(endPoint)&s=\(search)") {
-            print("URL DE LA API: \(endPointURL)")
-            
-            urlSession.dataTask(with: endPointURL) { data, _, error in
-                if let dataResult = data {
-                    do {
-                        // Convierte los datos en un objeto JSON
-                        if let jsonObject = try JSONSerialization.jsonObject(with: dataResult, options: []) as? [String: Any] {
-                            // Luego, puedes convertir el objeto JSON en un formato de datos JSON nuevamente
-                            if let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) {
-                                // jsonData ahora contiene tus datos en formato JSON
-                                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                    if let jsonData = jsonString.data(using: .utf8) {
-                                        do {
-                                            let objetos = try JSONDecoder().decode([OMDB].self, from: jsonData)
-                                            // Ahora tienes un array de objetos de tipo Objeto
-                                            for objeto in objetos {
-                                                print("Title: \(objeto.title)")
-                                                print("Type: \(objeto.type)")
-                                                print("Image: \(objeto.poster)")
-                                                print("Year: \(objeto.year)")
-                                                print("-------------------------------------------")
-                                            }
-                                        } catch {
-                                            print("Error al decodificar el JSON en objetos Objeto: \(error)")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch {
-                        print("Error al convertir los datos en JSON: \(error)")
-                    }
+        // Configura la URL con tu clave de API
+        let apiKey = "TU_CLAVE_API"
+        let urlString = "https://www.omdbapi.com/?apikey=\(apiKey)&t=The+Fast+and+the+Furious" // Ejemplo de búsqueda de una película por título
+
+        if let url = URL(string: urlString) {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print("Error en la solicitud HTTP: \(error.localizedDescription)")
+                    return
                 }
                 
-            }.resume()
+                if let data = data {
+                    // Procesa los datos de respuesta (parsing)
+                    do {
+                        let decoder = JSONDecoder()
+                        let omdbResponse = try decoder.decode(OMDBResponse.self, from: data)
+                        
+                        // Ahora tienes los datos de la respuesta en objetos Swift (por ejemplo, omdbResponse.search[0].title)
+                        for i in 0...10 {
+                            print(omdbResponse.search[i].title)
+                            print(omdbResponse.search[i].type)
+                            print(omdbResponse.search[i].year)
+                            print(omdbResponse.search[i].imdbID)
+                            print(omdbResponse.search[i].poster)
+                        }
+                        // Actualiza la interfaz de usuario en el hilo principal (puedes usar DispatchQueue.main.async)
+                    } catch {
+                        print("Error al decodificar JSON: \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+            task.resume()
         }
+
     }
 }
