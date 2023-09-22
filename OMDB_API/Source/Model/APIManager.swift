@@ -35,7 +35,7 @@ class APICall {
                                                 print("Type: \(objeto.type)")
                                                 print("Image: \(objeto.poster)")
                                                 print("Year: \(objeto.year)")
-                                                print("")
+                                                print("-------------------------------------------")
                                             }
                                         } catch {
                                             print("Error al decodificar el JSON en objetos Objeto: \(error)")
