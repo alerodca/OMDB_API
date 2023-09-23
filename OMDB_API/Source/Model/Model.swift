@@ -4,19 +4,8 @@
 //
 //  Created by Alejandro Rodríguez Cañete on 21/9/23.
 //
-import Foundation
 
-struct OMDBResponse: Codable {
-    let search: [OMDBItem]
-    let totalResults: String
-    let response: String
-    
-    private enum CodingKeys: String, CodingKey {
-        case search = "Search"
-        case totalResults
-        case response = "Response"
-    }
-}
+import Foundation
 
 struct OMDBItem: Codable {
     let title: String
@@ -33,7 +22,6 @@ struct OMDBItem: Codable {
         case poster = "Poster"
     }
 }
-
 
 // THIS RETURN API
 
