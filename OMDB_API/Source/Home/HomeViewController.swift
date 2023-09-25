@@ -27,7 +27,6 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         configureUI()
-        apicall.getMoviesOrSeries(search: "Dragon Ball Z")
     }
     
     // MARK: - Actions
@@ -40,6 +39,9 @@ class HomeViewController: UIViewController {
         searchBar.placeholder = "Enter the name for search..."
         searchBar.showsCancelButton = true
         searchBar.delegate = self
+        // tableview
+//        tableView.delegate = self
+//        tableView.dataSource = self
     }
 }
 
@@ -54,3 +56,15 @@ extension HomeViewController: UISearchBarDelegate {
         }
     }
 }
+
+//extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return apicall.enternaiment.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        <#code#>
+//    }
+//
+//
+//}

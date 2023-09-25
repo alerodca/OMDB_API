@@ -7,12 +7,18 @@
 
 import Foundation
 
+struct OMDBResponse: Codable {
+    let Search: [OMDBItem]?
+    let totalResults: String?
+    let Response: String
+}
+
 struct OMDBItem: Codable {
     let title: String
     let year: String
     let imdbID: String
     let type: String
-    let poster: URL
+    let poster: String
     
     private enum CodingKeys: String, CodingKey {
         case title = "Title"

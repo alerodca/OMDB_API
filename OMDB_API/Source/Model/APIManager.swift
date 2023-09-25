@@ -8,6 +8,9 @@
 import Foundation
 
 class APICall {
+    
+    public var enternaiment: [OMDBItem] = []
+    
     func getMoviesOrSeries(search:String) {
         // Example Correct URL  http://www.omdbapi.com/?apikey=525f6ef2&s=dragon ball z
         
@@ -15,21 +18,25 @@ class APICall {
         let urlSession = URLSession.shared
         
         if let endPointURL = URL(string: "\(endPoint)&s=\(search)") {
-            print("URL DE LA API: \(endPointURL)")
-            
-            urlSession.dataTask(with: endPointURL) { data, _, error in
+            let task = urlSession.dataTask(with: endPointURL) { data, _, error in
                 if let dataResult = data {
                     do {
                         let decoder = JSONDecoder()
-                        let enternaiment = try decoder.decode(OMDBItem.self, from: dataResult)
+                        let decode = try decoder.decode(OMDBResponse.self, from: dataResult)
                         
-                        print(enternaiment)
+                        self.enternaiment = decode.Search ?? []
+                        
+                        if (decode.totalResults == "0") {
+                            print("La API no ha devuelto ningún dato")
+                        } else {
+                            print("Nº de coincidencias: \(decode.totalResults)")
+                        }
                     } catch {
                         print("Error al convertir los datos en JSON: \(error)")
                     }
                 }
-                
-            }.resume()
+            }
+            task.resume()
         }
     }
 }
